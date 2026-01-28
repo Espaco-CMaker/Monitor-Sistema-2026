@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Monitor de Sistema em Tempo Real - Espaço CMaker">
+    <meta name="author" content="Espaço CMaker">
+    <title>Monitor Sistema 2026 - Espaço CMaker</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .iframe-container {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+            min-height: 800px;
+        }
+        
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 1;
+        }
+        
+        .loading.hidden {
+            display: none;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            display: none;
+            padding: 20px;
+            margin: 20px;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+            
+            .iframe-container {
+                min-height: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🖥️ Monitor Sistema 2026</h1>
+        <p>Monitoramento em Tempo Real - Espaço CMaker</p>
+    </div>
+    
+    <div class="iframe-container">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="color: #667eea; font-size: 1.2em;">Carregando dashboard...</p>
+        </div>
+        
+        <div class="error-message" id="error">
+            ❌ Não foi possível carregar o dashboard. Verifique sua conexão.
+        </div>
+        
+        <!-- IMPORTANTE: Substitua a URL abaixo pela URL do seu Railway ou servidor -->
+        <iframe 
+            id="monitor-iframe"
+            src="http://localhost:3000"
+            title="Monitor Sistema 2026"
+            allow="autoplay; camera; microphone"
+            loading="lazy">
+        </iframe>
+    </div>
+    
+    <div class="footer">
+        <p>Desenvolvido por <a href="https://cmaker.com.br" target="_blank">Espaço CMaker</a></p>
+        <p style="font-size: 0.9em; margin-top: 10px; opacity: 0.8;">
+            © 2026 - Todos os direitos reservados
+        </p>
+    </div>
+    
+    <script>
+        const iframe = document.getElementById('monitor-iframe');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        
+        // Detectar quando o iframe carregou
+        iframe.addEventListener('load', function() {
+            loading.classList.add('hidden');
+        });
+        
+        // Detectar erro de carregamento
+        iframe.addEventListener('error', function() {
+            loading.classList.add('hidden');
+            error.classList.add('show');
+        });
+        
+        // Timeout de 10 segundos
+        setTimeout(function() {
+            if (!loading.classList.contains('hidden')) {
+                loading.classList.add('hidden');
+                error.classList.add('show');
+            }
+        }, 10000);
+        
+        // Responsividade do iframe
+        function adjustIframeHeight() {
+            const container = document.querySelector('.iframe-container');
+            const windowHeight = window.innerHeight;
+            const headerHeight = document.querySelector('.header').offsetHeight;
+            const footerHeight = document.querySelector('.footer').offsetHeight;
+            const padding = 60;
+            
+            const availableHeight = windowHeight - headerHeight - footerHeight - padding;
+            container.style.height = availableHeight + 'px';
+        }
+        
+        window.addEventListener('load', adjustIframeHeight);
+        window.addEventListener('resize', adjustIframeHeight);
+    </script>
+</body>
+</html>
