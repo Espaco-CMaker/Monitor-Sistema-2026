@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Monitor 2026 | Futuristic Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="matrix-bg"></div>
+    
+    <!-- Circuito animado para tema circuitos -->
+    <svg id="circuit-overlay" class="circuit-overlay" width="100%" height="100%" viewBox="0 0 1920 1080" preserveAspectRatio="none">
+        <defs>
+            <linearGradient id="byte-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00ff00;stop-opacity:0" />
+                <stop offset="50%" style="stop-color:#00ff00;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#00ff00;stop-opacity:0" />
+            </linearGradient>
+            <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Header Consolidado -->
+    <header class="app-header">
+        <div class="header-left">
+            <h1 class="app-title">
+                <span class="glow">SYSTEM MONITOR</span>
+                <span class="subtitle">2026 Advanced Analytics</span>
+            </h1>
+        </div>
+        
+        <div class="header-right">
+            <!-- Controls Container -->
+            <div class="controls-container">
+                <!-- Card Visibility -->
+                <div>
+                    <button id="toggle-controls" class="control-btn">⚙️ CARDS</button>
+                    <div id="control-panel" class="control-panel" style="display: none;">
+                        <h4>Mostrar/Ocultar</h4>
+                        <label><input type="checkbox" class="card-toggle" data-card="cpu-card" checked> 🖥️ CPU</label>
+                        <label><input type="checkbox" class="card-toggle" data-card="temp-card" checked> 🌡️ Temp</label>
+                        <label><input type="checkbox" class="card-toggle" data-card="memory-card" checked> 💾 RAM</label>
+                        <label><input type="checkbox" class="card-toggle" data-card="gpu-card" checked> 🎮 GPU</label>
+                        <label><input type="checkbox" class="card-toggle" data-card="disk-card" checked> 💿 Disk</label>
+                        <label><input type="checkbox" class="card-toggle" data-card="fs-card" checked> 📁 FS</label>
+                        <label><input type="checkbox" class="card-toggle" data-card="network-card" checked> 📡 Net</label>
+                        <label><input type="checkbox" class="card-toggle" data-card="system-card" checked> ⚙️ Sys</label>
+                        <label><input type="checkbox" class="card-toggle" data-card="process-card" checked> ⚡ Proc</label>
+                        <label><input type="checkbox" class="card-toggle" data-card="battery-card" checked> 🔋 Bat</label>
+                    </div>
+                </div>
+
+                <!-- Theme Selector -->
+                <div>
+                    <button id="toggle-theme" class="control-btn">🎨 TEMA</button>
+                    <div id="theme-buttons" class="theme-buttons" style="display: none;">
+                        <button class="theme-btn active" data-theme="cyberpunk">Cyber</button>
+                        <button class="theme-btn" data-theme="steampunk">Steam</button>
+                        <button class="theme-btn" data-theme="futurista">Future</button>
+                        <button class="theme-btn" data-theme="circuitos">Circuit</button>
+                        <button class="theme-btn" data-theme="neon">Neon</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CMaker Banner -->
+            <div class="cmaker-banner-horizontal">
+                <h2>🚀 Espaço CMaker</h2>
+                <p>Inovação e Tecnologia para o Futuro</p>
+                <div class="banner-links">
+                    <a href="https://cmaker.com.br" target="_blank" class="banner-link">🌐 cmaker.com.br</a>
+                    <a href="https://instagram.com/espaco_cmaker" target="_blank" class="banner-link">📱 @espaco_cmaker</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <header class="header">
+        </header>
+
+        <div class="grid">
+            <!-- CPU Section -->
+            <div class="card cpu-card">
+                <div class="card-header">
+                    <h2>🖥️ PROCESSADOR</h2>
+                    <div class="badge" id="cpu-badge">0%</div>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <span class="label">Modelo:</span>
+                        <span class="value" id="cpu-brand">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Cores Físicos:</span>
+                        <span class="value" id="cpu-physical-cores">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Cores Lógicos:</span>
+                        <span class="value" id="cpu-cores">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Velocidade:</span>
+                        <span class="value" id="cpu-speed">--</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill cpu-progress" id="cpu-progress"></div>
+                        <span class="progress-text">Uso da CPU</span>
+                    </div>
+                    
+                    <div class="cores-grid" id="cores-grid"></div>
+                </div>
+            </div>
+
+            <!-- Temperature -->
+            <div class="card temp-card">
+                <div class="card-header">
+                    <h2>🌡️ TEMPERATURA</h2>
+                    <div class="badge temp-badge" id="temp-badge">0°C</div>
+                </div>
+                <div class="card-body">
+                    <div class="temp-display">
+                        <div class="temp-circle" id="temp-circle">
+                            <span id="temp-main">--°C</span>
+                        </div>
+                        <div class="temp-max">
+                            Max: <span id="temp-max">--°C</span>
+                        </div>
+                    </div>
+                    <div class="cores-temp" id="cores-temp"></div>
+                </div>
+            </div>
+
+            <!-- Memory -->
+            <div class="card memory-card">
+                <div class="card-header">
+                    <h2>💾 MEMÓRIA RAM</h2>
+                    <div class="badge" id="mem-badge">0%</div>
+                </div>
+                <div class="card-body">
+                    <!-- Gráfico visual de memória com histórico -->
+                    <div class="memory-chart-container">
+                        <canvas id="memory-chart" width="400" height="150"></canvas>
+                    </div>
+                    
+                    <div class="memory-info-grid">
+                        <div class="info-item">
+                            <span class="label">Total:</span>
+                            <span class="value" id="mem-total">--</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Usado:</span>
+                            <span class="value" id="mem-used">--</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Disponível:</span>
+                            <span class="value" id="mem-available">--</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Livre:</span>
+                            <span class="value" id="mem-free">--</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill mem-progress" id="mem-progress"></div>
+                        <span class="progress-text">Uso da RAM</span>
+                    </div>
+                    
+                    <div class="swap-info">
+                        <h3>SWAP</h3>
+                        <div class="swap-grid">
+                            <div class="info-item">
+                                <span class="label">Total:</span>
+                                <span class="value" id="swap-total">--</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Usado:</span>
+                                <span class="value" id="swap-used">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GPU -->
+            <div class="card gpu-card">
+                <div class="card-header">
+                    <h2>🎮 GPU</h2>
+                    <div class="badge" id="gpu-badge">0%</div>
+                </div>
+                <div class="card-body" id="gpu-body">
+                    <div class="gpu-placeholder">Carregando...</div>
+                </div>
+            </div>
+
+            <!-- Disks -->
+            <div class="card disk-card">
+                <div class="card-header">
+                    <h2>💿 DISCOS</h2>
+                </div>
+                <div class="card-body" id="disks-body">
+                    <div class="disk-placeholder">Carregando...</div>
+                </div>
+            </div>
+
+            <!-- Filesystems -->
+            <div class="card fs-card">
+                <div class="card-header">
+                    <h2>📁 PARTIÇÕES</h2>
+                </div>
+                <div class="card-body" id="fs-body">
+                    <div class="fs-placeholder">Carregando...</div>
+                </div>
+            </div>
+
+            <!-- Network -->
+            <div class="card network-card">
+                <div class="card-header">
+                    <h2>📡 REDE</h2>
+                </div>
+                <div class="card-body" id="network-body">
+                    <div class="network-placeholder">Carregando...</div>
+                </div>
+            </div>
+
+            <!-- System Info -->
+            <div class="card system-card">
+                <div class="card-header">
+                    <h2>⚙️ SISTEMA</h2>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <span class="label">SO:</span>
+                        <span class="value" id="os-distro">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Hostname:</span>
+                        <span class="value" id="os-hostname">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Arquitetura:</span>
+                        <span class="value" id="os-arch">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Uptime:</span>
+                        <span class="value" id="os-uptime">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Fabricante:</span>
+                        <span class="value" id="sys-manufacturer">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Modelo:</span>
+                        <span class="value" id="sys-model">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Processes -->
+            <div class="card process-card">
+                <div class="card-header">
+                    <h2>⚡ PROCESSOS</h2>
+                </div>
+                <div class="card-body">
+                    <div class="process-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="proc-all">--</span>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="proc-running">--</span>
+                            <span class="stat-label">Rodando</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="proc-sleeping">--</span>
+                            <span class="stat-label">Dormindo</span>
+                        </div>
+                    </div>
+                    <div class="process-list" id="process-list"></div>
+                </div>
+            </div>
+
+            <!-- Battery -->
+            <div class="card battery-card" id="battery-card">
+                <div class="card-header">
+                    <h2>🔋 BATERIA</h2>
+                    <div class="badge" id="battery-badge">0%</div>
+                </div>
+                <div class="card-body" id="battery-body">
+                    <div class="battery-placeholder">Sem bateria detectada</div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="update-info">
+                Última atualização: <span id="last-update">--</span>
+            </div>
+            <div class="credit">
+                System Monitor 2026 | Powered by Node.js
+            </div>
+        </footer>
+
+        <!-- Log Area -->
+        <div class="log-container">
+            <div class="log-header">
+                <h3>📋 LOG DE SISTEMA</h3>
+                <button id="clear-log" class="log-clear">Limpar</button>
+            </div>
+            <div class="log-content" id="log-content">
+                <div class="log-entry info">Sistema iniciado...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
