@@ -1,14 +1,31 @@
 {
-  "name": "servidorteste",
-  "version": "0.1.0",
-  "description": "System Monitor 2026 - Futuristic Dashboard v0.1",
+  "name": "monitor-sistema-2026",
+  "version": "0.2.0",
+  "description": "System Monitor 2026 - Real-time System Information Dashboard",
   "main": "servidor.js",
   "scripts": {
+    "start": "node servidor.js",
+    "dev": "node servidor.js",
+    "prod": "NODE_ENV=production node servidor.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "system-monitor",
+    "dashboard",
+    "real-time",
+    "nodejs",
+    "express"
+  ],
+  "author": "Espaço CMaker",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Espaco-CMaker/Monitor-Sistema-2026.git"
+  },
   "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.6",
