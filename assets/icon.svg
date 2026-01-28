@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#1a1a2e"/>
+  
+  <!-- Monitor screen -->
+  <rect x="60" y="80" width="392" height="280" rx="20" fill="#16213e" stroke="#00d4ff" stroke-width="4"/>
+  
+  <!-- Screen content - Grid -->
+  <g stroke="#00d4ff" stroke-width="2" fill="none">
+    <!-- Cards -->
+    <rect x="90" y="110" width="80" height="80" rx="5"/>
+    <rect x="200" y="110" width="80" height="80" rx="5"/>
+    <rect x="310" y="110" width="80" height="80" rx="5"/>
+    
+    <rect x="90" y="210" width="80" height="80" rx="5"/>
+    <rect x="200" y="210" width="80" height="80" rx="5"/>
+    <rect x="310" y="210" width="80" height="80" rx="5"/>
+  </g>
+  
+  <!-- Chart lines inside cards -->
+  <g stroke="#00ffff" stroke-width="1.5" fill="none">
+    <polyline points="100,155 115,145 130,150"/>
+    <polyline points="210,155 225,140 240,155"/>
+    <polyline points="320,155 335,150 350,160"/>
+  </g>
+  
+  <!-- Monitor stand -->
+  <rect x="140" y="365" width="232" height="20" rx="5" fill="#00d4ff"/>
+  <path d="M 200 385 L 190 420 M 312 385 L 322 420" stroke="#00d4ff" stroke-width="12" fill="none" stroke-linecap="round"/>
+  
+  <!-- Power indicator (glowing dot) -->
+  <circle cx="480" cy="360" r="12" fill="#00ff00" opacity="0.8"/>
+  <circle cx="480" cy="360" r="6" fill="#00ff00"/>
+  
+  <!-- Text labels -->
+  <text x="256" y="470" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#00d4ff" text-anchor="middle">
+    MONITOR 2026
+  </text>
+</svg>
