@@ -44,12 +44,12 @@
     "concurrently": "^8.2.2",
     "electron": "^40.0.0",
     "electron-builder": "^26.4.0",
-    "electron-is-dev": "^3.0.1",
     "wait-on": "^7.2.0"
   },
   "build": {
     "appId": "com.cmaker.monitor-sistema-2026",
     "productName": "Monitor Sistema 2026",
+    "asar": false,
     "directories": {
       "buildResources": "assets"
     },
@@ -59,29 +59,18 @@
       "servidor.js",
       "public/**/*",
       "package.json",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme,test,tests,*.d.ts}"
     ],
     "win": {
       "target": [
         {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        },
-        {
-          "target": "portable",
+          "target": "zip",
           "arch": [
             "x64"
           ]
         }
       ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
     },
     "mac": {
       "target": [

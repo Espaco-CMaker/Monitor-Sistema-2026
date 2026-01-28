@@ -1,4 +1,20 @@
 @echo off
+REM Check if running as Administrator
+net session >nul 2>&1
+if %errorLevel% neq 0 (
+    echo =========================================
+    echo ERRO: Executar como Administrador!
+    echo =========================================
+    echo.
+    echo Este script requer permissoes de administrador.
+    echo.
+    echo Clique direito neste arquivo e selecione:
+    echo "Executar como administrador"
+    echo.
+    pause
+    exit /b 1
+)
+
 echo =========================================
 echo Monitor Sistema 2026 - Build Script
 echo =========================================
@@ -12,51 +28,44 @@ if "%1"=="" (
     echo   build.bat mac      - Build para macOS
     echo   build.bat linux    - Build para Linux
     echo   build.bat all      - Build para todos OS
+    pause
     exit /b 1
 )
 
 if "%1"=="win" (
-    echo [1/2] Instalando dependencias...
+    echo [1/3] Limpando arquivos antigos...
+    rmdir /s /q dist 2>nul
+    rmdir /s /q out 2>nul
+    echo.
+    echo [2/3] Instalando dependencias...
     call npm install
     echo.
-    echo [2/2] Gerando executavel Windows...
+    echo [3/3] Gerando executavel Windows...
     call npm run build-win
     echo.
     echo ✅ Build Windows concluido!
-    echo Arquivos em: dist/
-    pause
-) else if "%1"=="mac" (
-    echo [1/2] Instalando dependencias...
-    call npm install
+    echo Arquivos em: dist\
     echo.
-    echo [2/2] Gerando app macOS...
-    call npm run build-mac
-    echo.
-    echo ✅ Build macOS concluido!
-    echo Arquivos em: dist/
-    pause
-) else if "%1"=="linux" (
-    echo [1/2] Instalando dependencias...
-    call npm install
-    echo.
-    echo [2/2] Gerando AppImage e DEB...
-    call npm run build-linux
-    echo.
-    echo ✅ Build Linux concluido!
-    echo Arquivos em: dist/
     pause
 ) else if "%1"=="all" (
-    echo [1/3] Instalando dependencias...
+    echo [1/3] Limpando arquivos antigos...
+    rmdir /s /q dist 2>nul
+    rmdir /s /q out 2>nul
+    echo.
+    echo [2/3] Instalando dependencias...
     call npm install
     echo.
-    echo [2/3] Gerando Windows...
-    call npm run build-win
+    echo [3/3] Gerando builds para todos OS...
+    call npm run build
     echo.
-    echo [3/3] Build completo!
-    echo ✅ Todos os arquivos prontos em: dist/
+    echo ✅ Build completo!
+    echo Arquivos em: dist\
+    echo.
     pause
 ) else (
     echo Opcao invalida: %1
-    echo Use: build.bat [win|mac|linux|all]
+    echo Use: build.bat [win|all]
+    pause
     exit /b 1
 )
+
