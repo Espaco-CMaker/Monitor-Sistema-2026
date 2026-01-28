@@ -1,0 +1,18 @@
+/* Frontend Styles */
+
+.monitor-container {
+    display: flex;
+    flex-direction: column;
+    background: #f5f5f5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.monitor-container iframe {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .monitor-container {
+        height: 600px !important;
+    }
+}

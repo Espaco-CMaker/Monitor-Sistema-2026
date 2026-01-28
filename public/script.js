@@ -525,15 +525,44 @@ function formatSpeed(bytesPerSec) {
 // Atualizar informações do sistema
 async function updateSystemInfo() {
     try {
-        const response = await fetch('/api/system-info');
-        const data = await response.json();
+        const startTime = performance.now();
+        const requestUrl = '/api/system-info';
         
-        if (!data || Object.keys(data).length === 0) {
-            logger.add('Erro: dados vazios recebidos da API', 'warning');
+        console.log(`[${new Date().toLocaleTimeString('pt-BR')}] 📡 Iniciando requisição para ${requestUrl}`);
+        
+        const response = await fetch(requestUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Request-Time': new Date().toISOString()
+            }
+        });
+        
+        const responseTime = (performance.now() - startTime).toFixed(0);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            const errorMsg = `❌ Erro HTTP ${response.status}: ${response.statusText}`;
+            console.error(`[${new Date().toLocaleTimeString('pt-BR')}] ${errorMsg}`);
+            console.error(`   URL: ${requestUrl}`);
+            console.error(`   Status: ${response.status}`);
+            console.error(`   Response Body: ${errorText || '(vazio)'}`);
+            console.error(`   Tempo de resposta: ${responseTime}ms`);
+            logger.add(`${errorMsg} - Tempo: ${responseTime}ms`, 'error');
             return;
         }
         
-        logger.add('Dados do sistema atualizados', 'info');
+        const data = await response.json();
+        console.log(`[${new Date().toLocaleTimeString('pt-BR')}] ✅ Dados recebidos com sucesso - ${responseTime}ms`);
+        
+        if (!data || Object.keys(data).length === 0) {
+            const warningMsg = '⚠️ Dados vazios recebidos da API';
+            console.warn(`[${new Date().toLocaleTimeString('pt-BR')}] ${warningMsg}`);
+            logger.add(warningMsg, 'warning');
+            return;
+        }
+        
+        logger.add(`✅ Dados atualizados (${responseTime}ms)`, 'success');
         document.getElementById('cpu-brand').textContent = data.cpu.brand;
         document.getElementById('cpu-physical-cores').textContent = data.cpu.physicalCores;
         document.getElementById('cpu-cores').textContent = data.cpu.cores;
@@ -902,8 +931,31 @@ async function updateSystemInfo() {
         document.getElementById('last-update').textContent = new Date().toLocaleTimeString('pt-BR');
         
     } catch (error) {
-        console.error('Erro ao atualizar informações:', error);
-        logger.add(`Erro na API: ${error.message}`, 'error');
+        const timestamp = new Date().toLocaleTimeString('pt-BR');
+        const errorType = error.name || 'Erro Desconhecido';
+        const errorMsg = error.message || 'Sem mensagem de erro';
+        const errorStack = error.stack || 'Sem stack trace';
+        
+        console.error(`\n❌ ERRO NA API [${timestamp}]`);
+        console.error(`   Tipo: ${errorType}`);
+        console.error(`   Mensagem: ${errorMsg}`);
+        console.error(`   Stack: ${errorStack}`);
+        console.error(`   URL: /api/system-info`);
+        console.error(`   Navegador: ${navigator.userAgent}`);
+        console.error(`   Documento pronto: ${document.readyState}`);
+        console.error('━'.repeat(60));
+        
+        // Diferenciar entre tipos de erro
+        let userMessage = '';
+        if (error instanceof TypeError) {
+            userMessage = `⚠️ Erro de conexão: ${errorMsg}`;
+        } else if (error instanceof SyntaxError) {
+            userMessage = `⚠️ Erro ao processar dados: ${errorMsg}`;
+        } else {
+            userMessage = `❌ Erro na API: ${errorMsg}`;
+        }
+        
+        logger.add(userMessage, 'error');
     }
 }
 
