@@ -1,6 +1,6 @@
 {
   "name": "monitor-sistema-2026",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "System Monitor 2026 - Real-time System Information Dashboard",
   "main": "main.js",
   "homepage": "./",
