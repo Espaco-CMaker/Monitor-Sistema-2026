@@ -24,6 +24,7 @@ const createWindow = () => {
     height: 1080,
     minWidth: 800,
     minHeight: 600,
+    fullscreen: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
@@ -58,8 +59,7 @@ const createWindow = () => {
   // Primeira tentativa após 3 segundos (tempo para servidor iniciar)
   setTimeout(tryConnect, 3000);
 
-  // Abrir DevTools para debug
-  mainWindow.webContents.openDevTools();
+  // Não abrir DevTools automaticamente
 
   mainWindow.webContents.on('crashed', () => {
     log('❌ ERRO: Janela Electron caiu');

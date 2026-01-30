@@ -43,6 +43,23 @@ app.use((req, res, next) => {
     next();
 });
 
+
+// Endpoint para obter o IP da LAN
+app.get('/api/lan-ip', (req, res) => {
+    const nets = os.networkInterfaces();
+    let lanIp = null;
+    for (const name of Object.keys(nets)) {
+        for (const net of nets[name]) {
+            if (net.family === 'IPv4' && !net.internal) {
+                lanIp = net.address;
+                break;
+            }
+        }
+        if (lanIp) break;
+    }
+    res.json({ ip: lanIp });
+});
+
 // Servir arquivos estáticos
 app.use(express.static('public'));
 
@@ -248,12 +265,31 @@ app.get('/api/system-info', async (req, res) => {
 });
 
 app.listen(PORT, () => {
+    // Descobrir IP da LAN
+    const nets = os.networkInterfaces();
+    let lanIp = null;
+    for (const name of Object.keys(nets)) {
+        for (const net of nets[name]) {
+            if (net.family === 'IPv4' && !net.internal) {
+                lanIp = net.address;
+                break;
+            }
+        }
+        if (lanIp) break;
+    }
+    const urlLocal = `http://localhost:${PORT}`;
+    const urlLan = lanIp ? `http://${lanIp}:${PORT}` : null;
     console.log(`\n${'═'.repeat(60)}`);
     console.log(`🚀 SERVIDOR INICIADO COM SUCESSO`);
     console.log(`${'═'.repeat(60)}`);
     console.log(`📍 Porta: ${PORT}`);
-    console.log(`🌐 URL: http://localhost:${PORT}`);
-    console.log(`📊 API: http://localhost:${PORT}/api/system-info`);
+    if (urlLan) {
+        console.log(`🌐 URL: ${urlLan}`);
+        console.log(`📊 API: ${urlLan}/api/system-info`);
+    } else {
+        console.log(`🌐 URL: ${urlLocal}`);
+        console.log(`📊 API: ${urlLocal}/api/system-info`);
+    }
     console.log(`🖥️  Sistema: ${os.platform()} ${os.release()}`);
     console.log(`📦 Versão Node: ${process.version}`);
     console.log(`${'═'.repeat(60)}\n`);

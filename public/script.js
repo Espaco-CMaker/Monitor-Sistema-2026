@@ -977,3 +977,55 @@ document.addEventListener('click', (e) => {
         panel.style.display = 'none';
     }
 });
+
+// ===== LINKS DE ACESSO (localhost e IP LAN) =====
+function getLocalNetworkIP(callback) {
+    // Tenta obter o IP da LAN via fetch para a própria API (servidor deve expor isso)
+    fetch('/api/lan-ip')
+        .then(res => res.json())
+        .then(data => callback(data.ip))
+        .catch(() => callback(null));
+}
+
+function renderAccessLinks() {
+    const container = document.getElementById('access-links');
+    if (!container) return;
+    const localhost = 'http://localhost:3000';
+    getLocalNetworkIP(ip => {
+        let html = `<b>Acesse pelo navegador:</b> <a href="${localhost}" target="_blank">${localhost}</a>`;
+        if (ip) {
+            const lanUrl = `http://${ip}:3000`;
+            html += ` &nbsp;|&nbsp; <a href="${lanUrl}" target="_blank">${lanUrl}</a>`;
+        }
+        container.innerHTML = html;
+    });
+}
+
+renderAccessLinks();
+
+// ===== FULLSCREEN BUTTON =====
+const fullscreenBtn = document.getElementById('fullscreen-btn');
+if (fullscreenBtn) {
+    fullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+            fullscreenBtn.classList.add('active');
+            fullscreenBtn.textContent = '🗗 SAIR';
+        } else {
+            document.exitFullscreen();
+            fullscreenBtn.classList.remove('active');
+            fullscreenBtn.textContent = '🖵 FULL';
+        }
+    });
+
+    // Atualizar ícone ao sair do fullscreen por outros meios
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+            fullscreenBtn.classList.remove('active');
+            fullscreenBtn.textContent = '🖵 FULL';
+        } else {
+            fullscreenBtn.classList.add('active');
+            fullscreenBtn.textContent = '🗗 SAIR';
+        }
+    });
+}

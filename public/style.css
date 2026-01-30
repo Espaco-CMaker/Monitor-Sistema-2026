@@ -1,3 +1,20 @@
+/* Botão de tela cheia */
+#fullscreen-btn.control-btn {
+    font-size: 1.1em;
+    padding: 7px 16px;
+    margin-left: 8px;
+    background: var(--primary, #00ff88);
+    color: #222;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+#fullscreen-btn.control-btn.active {
+    background: #222;
+    color: var(--primary, #00ff88);
+    border: 1px solid var(--primary, #00ff88);
+}
 * {
     margin: 0;
     padding: 0;
