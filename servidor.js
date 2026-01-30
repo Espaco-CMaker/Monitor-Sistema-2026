@@ -283,13 +283,8 @@ app.listen(PORT, () => {
     console.log(`🚀 SERVIDOR INICIADO COM SUCESSO`);
     console.log(`${'═'.repeat(60)}`);
     console.log(`📍 Porta: ${PORT}`);
-    if (urlLan) {
-        console.log(`🌐 URL: ${urlLan}`);
-        console.log(`📊 API: ${urlLan}/api/system-info`);
-    } else {
-        console.log(`🌐 URL: ${urlLocal}`);
-        console.log(`📊 API: ${urlLocal}/api/system-info`);
-    }
+    console.log(`🌐 URL: ${urlLocal}`);
+    console.log(`📊 API: ${urlLocal}/api/system-info`);
     console.log(`🖥️  Sistema: ${os.platform()} ${os.release()}`);
     console.log(`📦 Versão Node: ${process.version}`);
     console.log(`${'═'.repeat(60)}\n`);
